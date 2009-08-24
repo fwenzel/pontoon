@@ -8,6 +8,9 @@ This is a proof-of-concept implementation of an in-place website localization to
 
 Please note that this is a very early alpha version, under development, and unlikely to do much out of the box. If you are interested in the technology, feel free to step by `#webdev` on irc://irc.mozilla.org.
 
+This is a schema of the application's components:
+![PO LiveEdit Schema](POLiveEdit.jpg)
+
 Prerequisites
 -------------
 ...
