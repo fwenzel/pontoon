@@ -74,8 +74,17 @@ class POLiveEdit
      * wraps an (already translated) string into PO LiveEdit comments
      */
     function wrap($translated, $msgid) {
-        $wrapped = sprintf('<span class="l10n md5_%1$s">%2$s</span>',
-            md5($msgid), $translated);
+        $wrapped = sprintf('<span class="l10n_start">%1$s</span>'
+            .'%2$s<span class="l10n_end"> </span>', md5($msgid), $translated);
         return $wrapped;
+    }
+
+    /**
+     * prints out header tags for the target app's template header, telling
+     * the client that this is a PO LiveEdit enhanced page
+     */
+    function header_tags() {
+        // TODO meta tag
+        echo '<style type="text/css"><!-- span.l10n_start, span.l10n_end { display:none !important; } --></style>';
     }
 }
