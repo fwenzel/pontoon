@@ -1,15 +1,14 @@
 PO LiveEdit
 ===========
 
-Austin King <aking at mozilla dot com>
-Frederic Wenzel <fwenzel at mozilla dot com>
+Austin King <aking@mozilla.com>
+Frederic Wenzel <fwenzel@mozilla.com>
 
-This is a proof-of-concept implementation of an in-place website localization tool, as outlined in http://ozten.com/psto/2009/08/14/a-sketch-of-po-liveedit/ .
+This is a proof-of-concept implementation of an in-place website localization tool, as outlined in <http://ozten.com/psto/2009/08/14/a-sketch-of-po-liveedit/>.
 
 Please note that this is a very early alpha version, under development, and unlikely to do much out of the box. If you are interested in the technology, feel free to step by `#webdev` on irc://irc.mozilla.org.
 
-This is a schema of the application's components:
-![PO LiveEdit Schema](POLiveEdit.jpg)
+POLiveEdit.jpg contains a schema of the application's components.
 
 Prerequisites
 -------------
