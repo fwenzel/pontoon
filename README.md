@@ -1,14 +1,14 @@
-PO LiveEdit
-===========
+Pontoon
+=======
 
-Austin King <aking@mozilla.com>
-Frederic Wenzel <fwenzel@mozilla.com>
+* Frederic Wenzel <fwenzel@mozilla.com>
+* Austin King <aking@mozilla.com>
 
 This is a proof-of-concept implementation of an in-place website localization tool, as outlined in <http://ozten.com/psto/2009/08/14/a-sketch-of-po-liveedit/>.
 
-Please note that this is a very early alpha version, under development, and unlikely to do much out of the box. If you are interested in the technology, feel free to step by `#webdev` on irc://irc.mozilla.org.
+Please note that this is a very early alpha version, under development, and unlikely to do much out of the box. If you are interested in the technology, feel free to step by `#webdev` on <irc://irc.mozilla.org>.
 
-POLiveEdit.jpg contains a schema of the application's components.
+Pontoon.jpg contains a schema of the application's components.
 
 Prerequisites
 -------------
@@ -33,7 +33,7 @@ License
     for the specific language governing rights and limitations under the
     License.
 
-    The Original Code is PO LiveEdit.
+    The Original Code is Pontoon.
 
     The Initial Developer of the Original Code is
     Frederic Wenzel <fwenzel at mozilla dot com>.
