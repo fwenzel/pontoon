@@ -34,7 +34,7 @@
  * the provisions above, a recipient may use your version of this file under
  * the terms of any one of the MPL, the GPL or the LGPL.
  *
- * ***** END LICENSE BLOCK ***** */ 
+ * ***** END LICENSE BLOCK ***** */
 
 /**
  * Wrapper for gettext(), returns Pontoon-wrapped, localized strings to
@@ -69,7 +69,7 @@ class Pontoon
     function has_gettext() {
         return function_exists('gettext');
     }
-    
+
     /**
      * wraps an (already translated) string into Pontoon comments
      */
@@ -84,7 +84,7 @@ class Pontoon
      * the client that this is a Pontoon enhanced page
      */
     function header_tags() {
-        // TODO meta tag
+        echo '<meta name="Pontoon" content=""/>'."\n";
         echo '<style type="text/css"><!-- span.l10n_start, span.l10n_end { display:none !important; } --></style>';
     }
 }
