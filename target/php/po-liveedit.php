@@ -12,7 +12,7 @@
  * for the specific language governing rights and limitations under the
  * License.
  *
- * The Original Code is PO LiveEdit.
+ * The Original Code is Pontoon.
  *
  * The Initial Developer of the Original Code is
  * The Mozilla Foundation.
@@ -37,14 +37,14 @@
  * ***** END LICENSE BLOCK ***** */ 
 
 /**
- * Wrapper for gettext(), returns PO-LiveEdit-wrapped, localized strings to
- * be handled by the PO LiveEdit client component
+ * Wrapper for gettext(), returns Pontoon-wrapped, localized strings to
+ * be handled by the Pontoon client component
  */
 function _w($str) {
-    if (!POLiveEdit::has_gettext()) return $str;
+    if (!Pontoon::has_gettext()) return $str;
 
     $translated = _($str);
-    return POLiveEdit::wrap($translated, $str);
+    return Pontoon::wrap($translated, $str);
 }
 
 /**
@@ -52,16 +52,16 @@ function _w($str) {
  * FIXME: This probably does not work yet
  */
 function n_w($str1, $str2, $ct) {
-    if (!POLiveEdit::has_gettext()) return $str1;
+    if (!Pontoon::has_gettext()) return $str1;
 
     $translated = ngettext($str1, $str2, $ct);
-    return POLiveEdit::wrap($translated, $str1);
+    return Pontoon::wrap($translated, $str1);
 }
 
 /**
  * Main target component
  */
-class POLiveEdit
+class Pontoon
 {
     /**
      * is gettext installed?
@@ -71,7 +71,7 @@ class POLiveEdit
     }
     
     /**
-     * wraps an (already translated) string into PO LiveEdit comments
+     * wraps an (already translated) string into Pontoon comments
      */
     function wrap($translated, $msgid) {
         $wrapped = sprintf('<span class="l10n_start">%1$s</span>'
@@ -81,7 +81,7 @@ class POLiveEdit
 
     /**
      * prints out header tags for the target app's template header, telling
-     * the client that this is a PO LiveEdit enhanced page
+     * the client that this is a Pontoon enhanced page
      */
     function header_tags() {
         // TODO meta tag
