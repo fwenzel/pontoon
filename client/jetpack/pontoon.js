@@ -61,6 +61,7 @@ function addPontoonSlidebar(doc) {
     onReady: function(slide) {
       jetpack.tabs.onReady(function() {
         var doc = jetpack.tabs.focused.contentDocument;
+        slide.contentDocument.reload();
         if (detectPontoon(doc)) slide.notify();
       });
       jetpack.tabs.onFocus(function() {
@@ -94,9 +95,13 @@ function slidebarContent(slide) {
     return false;
   }
 
-  $ptn.find('p').replaceWith((<r><![CDATA[
-    <p>This is a list of elements that can be translated on this page. Hover any of them 
-      to see them highlighted.</p>
+  // reset content
+  $ptn.find('h1').nextAll().remove();
+
+  $ptn.find('body').append((<r><![CDATA[
+    <p>This is a list of elements that can be translated on this page. Hover over
+      any of them to see them highlighted.</p>
+    <p>To translate a string, simply click on it.</p>
     ]]></r>).toString());
 
   // make list of translatable items
@@ -104,34 +109,35 @@ function slidebarContent(slide) {
   var thelist = $('<ul></ul>');
   $ptn.find('ul').remove();
   translatable.each(function() {
-    var that = $(this); // the translatable span
     var li = $('<li></li>');
     var hash = /md5_([a-zA-z0-9]+)/.exec($(this).attr('class'))[1];
 
     // add each hash only once
-    if (thelist.find('li:contains('+hash+')').size()>0) return true;
+    if (thelist.find('li#'+hash).size()>0) return true;
 
-    li.text(hash);
+    li.attr('id', hash)
+      .text(shorten($(this).html()));
     thelist.append(li);
     return true;
   });
-  $ptn.find('p').after(thelist);
+  $ptn.find('body').append(thelist);
 
   thelist.children('li')
     .hover(function() {
-      var spans = findHash($(this).text());
+      var spans = findHash($(this).attr('id'));
       spans.addClass('hilight');
     }, function() {
-      var spans = findHash($(this).text());
+      var spans = findHash($(this).attr('id'));
       spans.removeClass('hilight');
     })
     .click(function() {
       var win = jetpack.tabs.focused.contentWindow,
-        spans = findHash($(this).text()),
+        spans = findHash($(this).attr('id')),
         orig = spans.filter(':first').html();
       var answer = win.prompt('Please translate: '+orig, orig);
       if (answer != null) {
         spans.html(answer);
+        $(this).text(shorten(answer));
         jetpack.notifications.show({
           title: "Translation changed",
           body: "Changed "+orig+" to "+answer
@@ -147,4 +153,14 @@ function slidebarContent(slide) {
  */
 function findHash(hash) {
   return $('span.l10n.md5_'+hash, jetpack.tabs.focused.contentDocument);
+}
+
+/**
+ * shorten an string
+ */
+function shorten(text, maxlen) {
+  if (!maxlen) maxlen = 50;
+
+  if (text.length <= maxlen) return text;
+  return text.substr(0, maxlen-4)+new String(' ...');
 }
