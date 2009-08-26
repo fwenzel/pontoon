@@ -65,7 +65,10 @@ function addPontoonSlidebar(doc) {
       });
       jetpack.tabs.onFocus(function() {
         var doc = jetpack.tabs.focused.contentDocument;
-        if (!detectPontoon(doc)) slide.close();
+        if (detectPontoon(doc))
+          slide.notify();
+        else
+          slide.close();
       });
     },
     onClick: slidebarContent,
@@ -97,48 +100,51 @@ function slidebarContent(slide) {
     ]]></r>).toString());
 
   // make list of translatable items
-  translatable = $doc.find('span.l10n_start');
+  translatable = $doc.find('span.l10n');
   var thelist = $('<ul></ul>');
   $ptn.find('ul').remove();
   translatable.each(function() {
     var that = $(this); // the translatable span
     var li = $('<li></li>');
-    var hash = $(this).text();
+    var hash = /md5_([a-zA-z0-9]+)/.exec($(this).attr('class'))[1];
+
+    // add each hash only once
+    if (thelist.find('li:contains('+hash+')').size()>0) return true;
+
     li.text(hash);
     thelist.append(li);
+    return true;
   });
   $ptn.find('p').after(thelist);
 
-  thelist.children('li').hover(function() {
-    var hash = $(this).text(),
-        span = $("span.l10n_start:contains('"+hash+"')", doc),
-        spancontent = getSpanContent(hash);
-
-    //jetpack.notifications.show(hash+' matched '+spancontent.size()+' elements');
-
-    spancontent.remove();
-    span.after('omg');
-  }, function() {});
+  thelist.children('li')
+    .hover(function() {
+      var spans = findHash($(this).text());
+      spans.addClass('hilight');
+    }, function() {
+      var spans = findHash($(this).text());
+      spans.removeClass('hilight');
+    })
+    .click(function() {
+      var win = jetpack.tabs.focused.contentWindow,
+        spans = findHash($(this).text()),
+        orig = spans.filter(':first').html();
+      var answer = win.prompt('Please translate: '+orig, orig);
+      if (answer != null) {
+        spans.html(answer);
+        jetpack.notifications.show({
+          title: "Translation changed",
+          body: "Changed "+orig+" to "+answer
+          });
+        }
+    });
   
   return true;
 }
 
 /**
- * get the content of a l10n_start/end group, no matter if they are text nodes
- * or not
+ * find all l10n spans with the given hash
  */
-function getSpanContent(hash) {
-  var span = $("span.l10n_start:contains('"+hash+"')", jetpack.tabs.focused.contentDocument);
-  var filteron = false;
-  var spancontent = span.parent().contents().filter(function() {
-    if ($(this).is("span.l10n_start:contains('"+hash+"')")) {
-      filteron = true;
-      return false;
-    } else if ($(this).is('span.l10n_end')) {
-      filteron = false;
-      return false;
-    }
-    return filteron;
-  });
-  return spancontent;
+function findHash(hash) {
+  return $('span.l10n.md5_'+hash, jetpack.tabs.focused.contentDocument);
 }

@@ -74,8 +74,10 @@ class Pontoon
      * wraps an (already translated) string into Pontoon comments
      */
     function wrap($translated, $msgid) {
-        $wrapped = sprintf('<span class="l10n_start">%1$s</span>'
-            .'%2$s<span class="l10n_end"> </span>', md5($msgid), $translated);
+        /*$wrapped = sprintf('<span class="l10n_start">%1$s</span>'
+            .'%2$s<span class="l10n_end"> </span>', md5($msgid), $translated);*/
+        $wrapped = sprintf('<span class="l10n md5_%1$s">%2$s</span>',
+            md5($msgid), $translated);
         return $wrapped;
     }
 
@@ -85,6 +87,16 @@ class Pontoon
      */
     function header_tags() {
         echo '<meta name="Pontoon" content=""/>'."\n";
-        echo '<style type="text/css"><!-- span.l10n_start, span.l10n_end { display:none !important; } --></style>';
+        echo <<<STYLE
+<style type="text/css"><!--
+span.l10n {
+    margin: 0 !important;
+    padding: 0 !important;
+    border: none !important;
+    background: transparent !important;
+}
+span.l10n.hilight { background: red !important; }
+--></style>'
+STYLE;
     }
 }
