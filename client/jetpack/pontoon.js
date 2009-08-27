@@ -83,7 +83,7 @@ function addPontoonSlidebar(doc) {
 }
 
 /**
- * Calculate the sidebar content based on the current document
+ * Show the sidebar content based on the current document
  */
 function slidebarContent(slide) {
   var ptn = slide.contentDocument,
@@ -110,7 +110,7 @@ function slidebarContent(slide) {
   $ptn.find('ul').remove();
   translatable.each(function() {
     var li = $('<li></li>');
-    var hash = /md5_([a-zA-z0-9]+)/.exec($(this).attr('class'))[1];
+    var hash = /md5_([a-zA-Z0-9]+)/.exec($(this).attr('class'))[1];
 
     // add each hash only once
     if (thelist.find('li#'+hash).size()>0) return true;
