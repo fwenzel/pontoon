@@ -1,7 +1,14 @@
 #!/usr/bin/env python
 
+import os.path
 import ConfigParser
+
 import web
+try:
+    import sqlite3
+except:
+    from pysqlite2 import dbapi2 as sqlite3
+
 
 __autor__ = 'Frederic Wenzel <fwenzel@mozilla.com>'
 __license__ = """
@@ -56,6 +63,16 @@ cfg_found = cfg.read(['pontoon.cfg', 'default.cfg'])
 if not cfg_found:
     raise IOError('No config files found')
 
+# open db
+dbpath = cfg.get('default', 'db')
+newdb = not os.path.exists(dbpath)
+db = sqlite3.connect(dbpath)
+cursor = db.cursor()
+if newdb:
+    for line in open('sql/pontoon.sql', 'r').readlines():
+        cursor.execute(line)
+
+# controllers
 class stats:
     """display public stats"""
     def GET(self):
