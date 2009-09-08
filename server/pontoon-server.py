@@ -1,7 +1,10 @@
 #!/usr/bin/env python
 
-import os.path
 import ConfigParser
+import getopt
+import md5
+import os.path
+import sys
 
 import web
 try:
@@ -72,12 +75,86 @@ if newdb:
     for line in open('sql/pontoon.sql', 'r').readlines():
         cursor.execute(line)
 
-# controllers
+# web.py controllers
 class stats:
     """display public stats"""
     def GET(self):
         return render.stats()
 
 
-if __name__ == '__main__':
+def parse_options():
+    """parse command line options"""
+    try:
+        opts, args = getopt.getopt(sys.argv[1:], "hadu:p:",
+                                   ['help', 'add', 'delete', 'user=', 'pass='])
+    except getopt.GetoptError, err:
+        print str(err)
+        usage()
+        sys.exit(2)
+
+    mode = None
+    user = None
+    passw = None
+    for o, a in opts:
+        if o in ('-h', '--help'):
+            usage()
+            sys.exit()
+        elif o in ('-a', '--add'):
+            mode = 'add'
+        elif o in ('-d', '--delete'):
+            mode = 'del'
+        elif o in ('-u', '--user'):
+            user = a
+        elif o in ('-p', '--pass'):
+            passw = a
+        else:
+            assert False, ("unknown option: %s" % o)
+
+    # remove options from arguments not to confuse web.py
+    sys.argv = args
+
+    # handle user adding / deletion
+    if mode == 'add' and user and passw:
+        try:
+            cursor.execute('INSERT INTO users (username, password) VALUES (?, ?)',
+                        (user, md5.new(passw).hexdigest()))
+            db.commit()
+        except Exception, e:
+            print e
+            print "Error creating user %s" % user
+            sys.exit(1)
+        rowid = cursor.lastrowid
+        print "Successfully created user %s with id %s" % (user, rowid)
+        return
+    elif mode == 'del' and user:
+        try:
+            cursor.execute('DELETE FROM users WHERE username=?', (user,))
+            db.commit()
+        except Exception, e:
+            print e
+            print "Error deleting user %s" % user
+            sys.exit(1)
+        if cursor.rowcount > 0:
+            print "Successfully deleted user %s" % (user)
+        else:
+            print "User %s did not exist" % (user)
+        return
+
+def usage():
+    print """
+    Pontoon server component
+    Usage:
+        -h, --help:     show this message
+        -a, --add:      add user (together with -u and -p)
+        -d, --delete:   delete user (together with -u)
+        -u, --user:     user name to add/delete
+        -p, --pass:     password for new user
+        (no options):   start server mode"""
+
+def main():
+    parse_options()
+    print "Starting to serve files..."
     app.run()
+
+if __name__ == '__main__':
+    main()
