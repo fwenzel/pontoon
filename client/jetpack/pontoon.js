@@ -73,12 +73,25 @@ function addPontoonSlidebar(doc) {
       });
     },
     onClick: slidebarContent,
-    html: <r><![CDATA[
+    html: <>
+      <style><![CDATA[
+      body {
+        background-color: #fff;
+        font-family: sans-serif;
+        font-size: 10pt;
+      }
+      ul li {
+        cursor: pointer;
+      }
+      ul li:hover {
+        text-decoration: underline;
+      }
+      ]]></style>
       <body>
         <h1>Welcome to Pontoon!</h1>
         <p>Click the icon on a page that is Pontoon-enhanced.</p>
       </body>
-    ]]></r>
+    </>
   });
 }
 
@@ -105,11 +118,11 @@ function slidebarContent(slide) {
     ]]></r>).toString());
 
   // make list of translatable items
-  translatable = $doc.find('span.l10n');
-  var thelist = $('<ul></ul>');
+  var translatable = $doc.find('span.l10n');
+  var thelist = $('<ul></ul>', ptn);
   $ptn.find('ul').remove();
   translatable.each(function() {
-    var li = $('<li></li>');
+    var li = $('<li></li>', ptn);
     var hash = /md5_([a-zA-Z0-9]+)/.exec($(this).attr('class'))[1];
 
     // add each hash only once
@@ -122,7 +135,7 @@ function slidebarContent(slide) {
   });
   $ptn.find('body').append(thelist);
 
-  thelist.children('li')
+  thelist.find('li')
     .hover(function() {
       var spans = findHash($(this).attr('id'));
       spans.addClass('hilight');
@@ -133,7 +146,8 @@ function slidebarContent(slide) {
     .click(function() {
       var win = jetpack.tabs.focused.contentWindow,
         spans = findHash($(this).attr('id')),
-        orig = spans.filter(':first').html();
+        orig = spans.eq(0).html();
+
       var answer = win.prompt('Please translate: '+orig, orig);
       if (answer != null) {
         spans.html(answer);
