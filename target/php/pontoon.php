@@ -66,14 +66,14 @@ class Pontoon
     /**
      * is gettext installed?
      */
-    function has_gettext() {
+    static function has_gettext() {
         return function_exists('gettext');
     }
 
     /**
      * wraps an (already translated) string into Pontoon comments
      */
-    function wrap($translated, $msgid) {
+    static function wrap($translated, $msgid) {
         $wrapped = sprintf('<span class="l10n md5_%1$s">%2$s</span>',
             md5($msgid), $translated);
         return $wrapped;
@@ -83,8 +83,8 @@ class Pontoon
      * prints out header tags for the target app's template header, telling
      * the client that this is a Pontoon enhanced page
      */
-    function header_tags() {
-        echo '<meta name="Pontoon" content=""/>'."\n";
+    static function header_tags() {
+        echo '<meta name="Pontoon" content="testproject"/>'."\n";
         echo <<<STYLE
 <style type="text/css"><!--
 span.l10n {
@@ -94,7 +94,7 @@ span.l10n {
     background: transparent !important;
 }
 span.l10n.hilight { outline: red dashed 2px !important; }
---></style>'
+--></style>
 STYLE;
     }
 }
