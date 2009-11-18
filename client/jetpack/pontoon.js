@@ -45,9 +45,16 @@ addPontoonSlidebar();
  * determine if the current page is "pontoon-enhanced"
  */
 function detectPontoon(doc) {
-  var $doc = $(doc),
-      meta = $doc.find('head > meta[name=Pontoon]');
+  var meta = $(doc).find('head > meta[name=Pontoon]');
   return (meta.size() > 0);
+}
+
+/**
+ * get project name
+ */
+function getProjectName(doc) {
+  var meta = $(doc).find('head > meta[name=Pontoon]');
+  return meta.attr('content');
 }
 
 /**
@@ -115,6 +122,8 @@ function slidebarContent(slide) {
     <p>This is a list of elements that can be translated on this page. Hover over
       any of them to see them highlighted.</p>
     <p>To translate a string, simply click on it.</p>
+    <label>Locale:</label>
+    <input type="text" id="locale" value="de" style="width:50px"/>
     ]]></r>).toString());
 
   // make list of translatable items
@@ -129,7 +138,8 @@ function slidebarContent(slide) {
     if (thelist.find('li#'+hash).size()>0) return true;
 
     li.attr('id', hash)
-      .text(shorten($(this).html()));
+      .text(shorten($(this).html()))
+      .attr('orig',$(this).html());
     thelist.append(li);
     return true;
   });
@@ -158,7 +168,26 @@ function slidebarContent(slide) {
           });
         }
     });
-  
+  $ptn.find('body').append('<button id="send">Send it</button>')
+  $ptn.find('#send').click(function() {
+	  var project = getProjectName(doc)
+	  var url = 'http://localhost:8080/push'
+      var lang = $ptn.find('#locale').val()
+      var data = { 'id': Array(), 
+		           'value': Array(),
+		           'project': project,
+		           'locale': lang}
+	  var entities = Array();
+	  
+	  $ptn.find('ul > li').each(function() {
+		  entities.push({'id':$(this).attr('orig'),'value':$(this).text()})
+	  })
+	  for (i in entities) {
+		  data['id'].push(entities[i].id)
+		  data['value'].push(entities[i].value)
+      }
+	  $.post(url, data, null, "text");
+  })
   return true;
 }
 
@@ -178,3 +207,4 @@ function shorten(text, maxlen) {
   if (text.length <= maxlen) return text;
   return text.substr(0, maxlen-4)+new String(' ...');
 }
+
