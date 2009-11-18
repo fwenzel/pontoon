@@ -1,9 +1,11 @@
 #!/usr/bin/env python
+# coding=utf-8
 
 import ConfigParser
 import getopt
 import md5
 import os.path
+import os
 import sys
 
 import web
@@ -11,6 +13,15 @@ try:
     import sqlite3
 except:
     from pysqlite2 import dbapi2 as sqlite3
+
+try:
+    sys.path.append('/Users/zbraniecki/projects/silme/lib')
+    import silme.core
+    import silme.format
+    import silme.io
+    silme.format.Manager.register('gettext')
+except:
+    raise
 
 
 __autor__ = 'Frederic Wenzel <fwenzel@mozilla.com>'
@@ -55,14 +66,15 @@ the terms of any one of the MPL, the GPL or the LGPL.
 
 # initialize web.py
 urls = (
-    '/', 'stats'
+    '/', 'stats',
+    '/push', 'push',
 )
 app = web.application(urls, globals())
 render = web.template.render('templates/')
 
 # read configs
 cfg = ConfigParser.SafeConfigParser()
-cfg_found = cfg.read(['pontoon.cfg', 'default.cfg'])
+cfg_found = cfg.read(['pontoon.cfg'])
 if not cfg_found:
     raise IOError('No config files found')
 
@@ -80,6 +92,29 @@ class stats:
     """display public stats"""
     def GET(self):
         return render.stats()
+
+class push:
+    """receive localization"""
+    def POST(self):
+        input=web.input(id=[], value=[])
+        lang = input.locale
+        project_path = cfg.get('default', 'projects').replace('PROJECT',input.project)
+        po_path = cfg.get(input.project, 'pofile').replace('LANG',lang)
+        path = os.path.join(project_path, po_path)
+
+        elist = silme.core.EntityList()
+        elist.id = 'messages.po'
+        
+        for i,id in enumerate(input.id):
+            entity = silme.core.Entity(input.id[i])
+            entity.value = input.value[i] 
+            elist.add_entity(entity)
+        if not os.path.isdir(path):
+            os.makedirs(path)
+        ioc = silme.io.Manager.get('file')
+        ioc.write_entitylist(elist, path=path,encoding='utf8')
+        return 'OK'
+
 
 
 def parse_options():
