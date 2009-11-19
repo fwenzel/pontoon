@@ -15,7 +15,6 @@ except:
     from pysqlite2 import dbapi2 as sqlite3
 
 try:
-    sys.path.append('/Users/zbraniecki/projects/silme/lib')
     import silme.core
     import silme.format
     import silme.io
@@ -66,12 +65,8 @@ the terms of any one of the MPL, the GPL or the LGPL.
 
 # initialize web.py
 urls = (
-<<<<<<< local
     '/', 'stats',
     '/push', 'push',
-=======
-    '/', 'stats'
->>>>>>> other
 )
 app = web.application(urls, globals())
 render = web.template.render('templates/')
