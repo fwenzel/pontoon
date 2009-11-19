@@ -50,7 +50,6 @@ function detectPontoon(doc) {
 }
 
 /**
- * get project name
  */
 function getProjectName(doc) {
   var meta = $(doc).find('head > meta[name=Pontoon]');
@@ -168,6 +167,7 @@ function slidebarContent(slide) {
           });
         }
     });
+
   $ptn.find('body').append('<button id="send">Send it</button>')
   $ptn.find('#send').click(function() {
 	  var project = getProjectName(doc)

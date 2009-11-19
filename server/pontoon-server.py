@@ -66,15 +66,19 @@ the terms of any one of the MPL, the GPL or the LGPL.
 
 # initialize web.py
 urls = (
+<<<<<<< local
     '/', 'stats',
     '/push', 'push',
+=======
+    '/', 'stats'
+>>>>>>> other
 )
 app = web.application(urls, globals())
 render = web.template.render('templates/')
 
 # read configs
 cfg = ConfigParser.SafeConfigParser()
-cfg_found = cfg.read(['pontoon.cfg'])
+cfg_found = cfg.read(['pontoon.cfg', 'default.cfg'])
 if not cfg_found:
     raise IOError('No config files found')
 
@@ -114,7 +118,6 @@ class push:
         ioc = silme.io.Manager.get('file')
         ioc.write_entitylist(elist, path=path,encoding='utf8')
         return 'OK'
-
 
 
 def parse_options():
