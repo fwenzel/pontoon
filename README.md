@@ -2,6 +2,7 @@ Pontoon
 =======
 
 * Frederic Wenzel <fwenzel@mozilla.com>
+* Zbigniew Braniecki <gandalf@mozilla.com>
 * Austin King <aking@mozilla.com>
 
 This is a proof-of-concept implementation of an in-place website localization tool, as outlined in <http://ozten.com/psto/2009/08/14/a-sketch-of-po-liveedit/>.
