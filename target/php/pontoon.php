@@ -84,7 +84,7 @@ class Pontoon
      * the client that this is a Pontoon enhanced page
      */
     static function header_tags() {
-        echo '<meta name="Pontoon" content="testproject"/>'."\n";
+        echo '<meta name="Pontoon" content="mozilla.org" ip="http://'.$_SERVER['SERVER_ADDR'].':8080/push"/>'."\n";
         echo <<<STYLE
 <style type="text/css"><!--
 span.l10n {

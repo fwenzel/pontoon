@@ -7,6 +7,7 @@ import md5
 import os.path
 import os
 import sys
+import commands
 
 import web
 try:
@@ -67,6 +68,7 @@ the terms of any one of the MPL, the GPL or the LGPL.
 urls = (
     '/', 'stats',
     '/push', 'push',
+    '/feedback', 'feedback',
 )
 app = web.application(urls, globals())
 render = web.template.render('templates/')
@@ -105,15 +107,37 @@ class push:
         elist.id = 'messages.po'
         
         for i,id in enumerate(input.id):
-            entity = silme.core.Entity(input.id[i])
-            entity.value = input.value[i] 
+            entity = silme.core.Entity(input.id[i].replace('"','\\"'))
+            entity.value = input.value[i].replace('"','\\"')
             elist.add_entity(entity)
         if not os.path.isdir(path):
             os.makedirs(path)
         ioc = silme.io.Manager.get('file')
         ioc.write_entitylist(elist, path=path,encoding='utf8')
+        commands.getstatusoutput('msgfmt %s -o %s' % (os.path.join(path,elist.id),
+                                                      os.path.join(path,'messages.mo')))
         return 'OK'
 
+class feedback:
+    """receive feedback"""
+    def GET(self):
+        db = sqlite3.connect(dbpath)
+        cursor = db.cursor()
+        cursor.execute("select * from feedback order by id")
+        
+        rows = [row for row in cursor]
+        return render.feedback(rows)
+        return 'OK'
+
+    def POST(self):
+        # page, lang, string, type, comment
+        input=web.input()
+        db = sqlite3.connect(dbpath)
+        cursor = db.cursor()
+        cursor.execute("insert into feedback values (?, ?, ?, ?, ?, ?)", (None, input.page, input.lang, input.string,
+                                                                    input.type, input.comment))
+        db.commit()
+        return 'OK'
 
 def parse_options():
     """parse command line options"""

@@ -57,6 +57,14 @@ function getProjectName(doc) {
 }
 
 /**
+ * get project ip
+ */
+function getProjectIP(doc) {
+  var meta = $(doc).find('head > meta[name=Pontoon]');
+  return meta.attr('ip');
+}
+
+/**
  * add the main Pontoon slidebar
  */
 function addPontoonSlidebar(doc) {
@@ -137,7 +145,7 @@ function slidebarContent(slide) {
     if (thelist.find('li#'+hash).size()>0) return true;
 
     li.attr('id', hash)
-      .text(shorten($(this).html()))
+      .text($(this).html())
       .attr('orig',$(this).html());
     thelist.append(li);
     return true;
@@ -161,6 +169,7 @@ function slidebarContent(slide) {
       if (answer != null) {
         spans.html(answer);
         $(this).text(shorten(answer));
+        $(this).attr('translation', answer)
         jetpack.notifications.show({
           title: "Translation changed",
           body: "Changed "+orig+" to "+answer
@@ -171,7 +180,8 @@ function slidebarContent(slide) {
   $ptn.find('body').append('<button id="send">Send it</button>')
   $ptn.find('#send').click(function() {
 	  var project = getProjectName(doc)
-	  var url = 'http://localhost:8080/push'
+	  var ip = getProjectIP(doc);
+	  var url = ip
       var lang = $ptn.find('#locale').val()
       var data = { 'id': Array(), 
 		           'value': Array(),
@@ -180,7 +190,8 @@ function slidebarContent(slide) {
 	  var entities = Array();
 	  
 	  $ptn.find('ul > li').each(function() {
-		  entities.push({'id':$(this).attr('orig'),'value':$(this).text()})
+		  var trans = $(this).attr('translation')?$(this).attr('translation'):$(this).attr('orig')
+		  entities.push({'id':$(this).attr('orig'),'value':trans})
 	  })
 	  for (i in entities) {
 		  data['id'].push(entities[i].id)
