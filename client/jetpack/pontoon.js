@@ -165,16 +165,10 @@ function slidebarContent(slide) {
         spans = findHash($(this).attr('id')),
         orig = spans.eq(0).html();
 
-      var answer = win.prompt('Please translate: '+orig, orig);
-      if (answer != null) {
-        spans.html(answer);
-        $(this).text(shorten(answer));
-        $(this).attr('translation', answer)
-        jetpack.notifications.show({
-          title: "Translation changed",
-          body: "Changed "+orig+" to "+answer
-          });
-        }
+      
+      var trans = $(this).attr('translation')?$(this).attr('translation'):$(this).attr('orig')
+      var answer = win.prompt('Please translate: '+$(this).attr('orig'), trans);
+      acceptTranslation($(this), answer)
     });
 
   $ptn.find('body').append('<button id="send">Send it</button>')
@@ -199,7 +193,33 @@ function slidebarContent(slide) {
       }
 	  $.post(url, data, null, "text");
   })
+  $doc.find('span').click(function() {
+	  var win = jetpack.tabs.focused.contentWindow
+	  var classes = $(this).attr('class').split(' ').slice(-1);
+	  var sid = classes.pop()
+	  var li = $ptn.find('#'+sid.substr(4))
+	  if (!li.attr('orig'))
+		  return false;
+	  var trans = li.attr('translation')?li.attr('translation'):li.attr('orig')
+	  var answer = win.prompt('Please translate: '+li.attr('orig'), trans)
+	  acceptTranslation(li, answer)
+	  return false;
+  });
   return true;
+}
+
+function acceptTranslation(li, answer) {
+  if (answer != null) {
+	var spans = findHash(li.attr('id'))
+    spans.html(answer);
+    li.text(shorten(answer));
+    li.attr('translation', answer)
+    var orig = li.attr('orig') 
+    jetpack.notifications.show({
+      title: "Translation changed",
+      body: "Changed "+orig+" to "+answer
+    });
+  }
 }
 
 /**
