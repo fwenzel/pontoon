@@ -1,2 +1,0 @@
--e git://github.com/webpy/webpy.git#egg=web
--e hg+http://hg.mozilla.org/l10n/silme/@silme-0.8.0#egg=silme

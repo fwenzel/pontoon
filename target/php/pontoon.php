@@ -74,8 +74,8 @@ class Pontoon
      * wraps an (already translated) string into Pontoon comments
      */
     static function wrap($translated, $msgid) {
-        $wrapped = sprintf('<span class="l10n md5_%1$s">%2$s</span>',
-            md5($msgid), $translated);
+        $wrapped = sprintf('<span class="l10n md5_%1$s">%2$s</span>',                           
+            $msgid, $translated);
         return $wrapped;
     }
 
@@ -84,7 +84,7 @@ class Pontoon
      * the client that this is a Pontoon enhanced page
      */
     static function header_tags() {
-        echo '<meta name="Pontoon" content="mozilla.org" ip="http://'.$_SERVER['SERVER_ADDR'].':8080/push"/>'."\n";
+        echo '<meta name="Pontoon" content="mozilla.org" ip="http://'.$_SERVER['SERVER_ADDR'].':8000/push/"/>'."\n";
         echo <<<STYLE
 <style type="text/css"><!--
 span.l10n {
@@ -98,4 +98,3 @@ span.l10n.hilight { outline: red dashed 2px !important; }
 STYLE;
     }
 }
-

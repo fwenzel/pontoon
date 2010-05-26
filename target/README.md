@@ -9,3 +9,8 @@ The target component(s) are the part of the web app that hook into the target ap
 You want to use `_w()` everywhere where you used `_()` before. A simple search-and-replace can achieve that.
 
 You need to insert a call to `header_tags` to your app's view headers, so that the meta tag is printed out.
+
+setup
+-----
+
+mkdir target/php/locale
