@@ -17,10 +17,11 @@ require_once('./pontoon.php');
 <?php Pontoon::header_tags();?>
 <script type="text/javascript">
 function f() {
-	  var w = "<?php echo _("My name is <span>Gandalf</span>"); ?>"
+	  var w = "<?php echo _w("My name is <span>Gandalf</span>"); ?>"
 	  $('#foo').html(w);
 	  $('#foo > span').text('foo2');
 	}
+f();
 </script>
 </head>
 <body>
@@ -37,5 +38,9 @@ foreach (new DirectoryIterator('./locale') as $fileInfo) {
 }
 ?>
 </ul>
+<script type="text/javascript" src="/client/www/js/jquery-1.4.2-min.js"></script>
+<script type="text/javascript">
+f();
+</script>
 </body>
 </html>
