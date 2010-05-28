@@ -21,7 +21,7 @@ function f() {
 	  $('#foo').html(w);
 	  $('#foo > span').text('foo2');
 	}
-f();
+
 </script>
 </head>
 <body>

@@ -22,11 +22,9 @@ $(document).ready(function(){
 function turnOn(pc, doc) {
   pc.enableEditing();
   $(".editableToolbar > .save", doc).click(function() {
-    var editable = $($(this).parent().get()[0].target)
-    var entity = editable.get()[0].entity
-    entity.translation = editable.html().toString();
-    entity.txtTranslation = editable.text().toString();
-    entity.ui.text(shorten(entity.txtTranslation))
+    var editable = $($(this).parent().get()[0].target);
+    //var html = this.contentWindow.document.body.innerHTML;
+    pc.updateEntitiesFromElement(editable);
   })
 }
 
