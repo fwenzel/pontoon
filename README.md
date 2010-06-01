@@ -17,8 +17,17 @@ Prerequisites
 
 Usage
 -----
-...
+Hacking on the demo
+Map / on a web server to the root of this project.
+Point your browser to /client/wwww
 
+Startup the django server
+cd server
+python manage.py runserver 0.0.0.0:8000
+
+Update hostnames as needed:
+  * lib/pontoon.js - 127.0.0.1:8000 - change to server hostname and port
+  * target/php/pontoon.php - 8000 - change port number
 License
 -------
     ***** BEGIN LICENSE BLOCK *****
